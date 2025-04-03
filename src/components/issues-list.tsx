@@ -118,13 +118,31 @@ export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
       )}
 
       <div className="space-y-4">
-        {issues.map((issue) => (
-          <IssueItem
-            key={issue.number}
-            issue={issue}
-            onCloseIssue={handleCloseIssue}
-          />
-        ))}
+        {issues.length > 0 ? (
+          issues.map((issue) => (
+            <IssueItem
+              key={issue.number}
+              issue={issue}
+              onCloseIssue={handleCloseIssue}
+            />
+          ))
+        ) : (
+          <div className="text-center p-6 rounded-lg bg-muted/20">
+            <p className="text-lg font-medium">No issues found</p>
+            {filters && Object.keys(filters).length > 0 && (
+              <div className="mt-2 text-sm text-muted-foreground">
+                <p>using filters:</p>
+                <ul className="list-disc pl-5 mt-1 inline-block text-left">
+                  {Object.entries(filters).map(([key, value]) => (
+                    <li key={key}>
+                      {key.replace(/_/g, ' ')}: {typeof value === 'string' ? `"${value}"` : value}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
