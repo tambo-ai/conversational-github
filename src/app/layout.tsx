@@ -1,4 +1,5 @@
 'use client'
+import { IssueItem } from "@/components/issue-item";
 import { GitHubIssues } from "@/components/issues-list";
 import { getIssues } from "@/services/github";
 import { TamboProvider, TamboTool, type TamboComponent } from "@tambo-ai/react";
@@ -32,17 +33,38 @@ const githubTool: TamboTool = {
   })))
 }
 
+const githubIssueSchemaString = `
+  {
+    number: number,
+    title: string,
+    body: string | null,
+    state: string,
+    created_at: string,
+    updated_at: string,
+    html_url: string,
+    comments: number,
+  }
+`;
+
 const tamboComponents: TamboComponent[] = [
   {
     name: "github-issues-list",
-    description: "A list of issues from a GitHub repository. Do not try and generate props.",
+    description: "A list of issues from a GitHub repository. Use this when the user wants to view a list of issues.",
     component: GitHubIssues,
     propsDefinition: {
     },
     associatedTools: [githubTool]
   },
+  {
+    name: "github-issue-item",
+    description: "Details of a single issue from a GitHub repository. Use this when the user wants to view the details of a single issue.",
+    component: IssueItem,
+    propsDefinition: {
+      issue: githubIssueSchemaString
+    },
+    associatedTools: [githubTool]
+  }
 ];
-
 export default function RootLayout({
   children,
 }: {

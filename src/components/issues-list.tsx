@@ -1,14 +1,13 @@
 import { useRepositoryStore } from '@/store/repository-store';
 import React, { useEffect, useState } from 'react';
 import { Issue, closeIssue, createIssue, getIssues } from '../services/github';
+import { CreateIssueForm } from './create-issue-form';
 import { IssueItem } from './issue-item';
 
 export const GitHubIssues: React.FC = () => {
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [newIssueTitle, setNewIssueTitle] = useState('');
-  const [newIssueBody, setNewIssueBody] = useState('');
   const { selectedRepository } = useRepositoryStore();
 
   useEffect(() => {
@@ -22,7 +21,7 @@ export const GitHubIssues: React.FC = () => {
 
     try {
       setLoading(true);
-      const fetchedIssues = await getIssues(selectedRepository);
+      const fetchedIssues = await getIssues();
       setIssues(fetchedIssues);
     } catch (err) {
       setError('Failed to load issues');
@@ -32,19 +31,16 @@ export const GitHubIssues: React.FC = () => {
     }
   };
 
-  const handleCreateIssue = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCreateIssue = async (title: string, body: string) => {
     if (!selectedRepository) return;
 
     try {
       const newIssue = await createIssue(
         selectedRepository,
-        newIssueTitle,
-        newIssueBody
+        title,
+        body
       );
       setIssues([newIssue, ...issues]);
-      setNewIssueTitle('');
-      setNewIssueBody('');
     } catch (err) {
       setError('Failed to create issue');
       console.error(err);
@@ -73,34 +69,6 @@ export const GitHubIssues: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <form onSubmit={handleCreateIssue} className="space-y-4">
-        <div>
-          <input
-            type="text"
-            value={newIssueTitle}
-            onChange={(e) => setNewIssueTitle(e.target.value)}
-            placeholder="Issue title"
-            className="w-full p-2 rounded-lg border bg-background text-foreground border-border"
-            required
-          />
-        </div>
-        <div>
-          <textarea
-            value={newIssueBody}
-            onChange={(e) => setNewIssueBody(e.target.value)}
-            placeholder="Issue description"
-            className="w-full p-2 rounded-lg border bg-background text-foreground border-border"
-            rows={4}
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
-        >
-          Create Issue
-        </button>
-      </form>
 
       <div className="space-y-4">
         {issues.map((issue) => (
@@ -111,6 +79,7 @@ export const GitHubIssues: React.FC = () => {
           />
         ))}
       </div>
+      <CreateIssueForm onSubmit={handleCreateIssue} />
     </div>
   );
 }; 

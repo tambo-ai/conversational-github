@@ -1,16 +1,25 @@
+'use client';
 import { useRepositoryStore } from '@/store/repository-store';
 import { ChevronDown, ChevronUp, MessageSquare } from 'lucide-react';
 import React, { useState } from 'react';
-import { Comment, getComments, Issue } from '../services/github';
+import { closeIssue, Comment, getComments, Issue } from '../services/github';
 
 interface IssueItemProps {
-  issue: Issue;
-  onCloseIssue: (issueNumber: number) => Promise<void>;
+  issue?: Issue;
+  onCloseIssue?: (issueNumber: number) => Promise<void>;
 }
 
 const MAX_DESCRIPTION_LENGTH = 150;
 
-export const IssueItem: React.FC<IssueItemProps> = ({ issue, onCloseIssue }) => {
+export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
+  number: 0,
+  title: '',
+  body: '',
+  state: '',
+  created_at: '',
+  updated_at: '',
+  html_url: '',
+}, onCloseIssue }) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
@@ -38,6 +47,16 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue, onCloseIssue }) => 
       }
     }
     setIsCommentsExpanded(!isCommentsExpanded);
+  };
+
+  const handleCloseIssue = async (issueNumber: number) => {
+    if (!selectedRepository) return;
+
+    try {
+      await closeIssue(selectedRepository, issueNumber);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
@@ -83,7 +102,7 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue, onCloseIssue }) => 
 
         {issue.state === 'open' && (
           <button
-            onClick={() => onCloseIssue(issue.number)}
+            onClick={() => onCloseIssue ? onCloseIssue(issue.number) : handleCloseIssue(issue.number)}
             className="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90"
           >
             Close Issue
