@@ -1,11 +1,12 @@
 'use client';
 import { useRepositoryStore } from '@/store/repository-store';
 import { ChevronDown, ChevronUp, MessageSquare, X } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { closeIssue, Comment, createComment, getComments, Issue } from '../services/github';
 
 interface IssueItemProps {
   issue?: Issue;
+  commentsOpen?: boolean;
   onCloseIssue?: (issueNumber: number) => Promise<void>;
 }
 
@@ -20,14 +21,18 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
   updated_at: '',
   html_url: '',
   comments: 0,
-}, onCloseIssue }) => {
+}, onCloseIssue, commentsOpen = false }) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
-  const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
+  const [isCommentsExpanded, setIsCommentsExpanded] = useState(commentsOpen);
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoadingComments, setIsLoadingComments] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const { selectedRepository } = useRepositoryStore();
+
+  useEffect(() => {
+    setIsCommentsExpanded(commentsOpen);
+  }, [commentsOpen]);
 
   const truncatedBody = issue.body && issue.body.length > MAX_DESCRIPTION_LENGTH
     ? issue.body.substring(0, MAX_DESCRIPTION_LENGTH) + '...'
