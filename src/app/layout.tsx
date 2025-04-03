@@ -2,9 +2,10 @@
 import { IssueItem } from "@/components/issue-item";
 import { getIssues } from "@/services/github";
 import { TamboProvider, TamboTool, type TamboComponent } from "@tambo-ai/react";
-import { IssuesList } from "@/components/issues-list";
 import { Geist, Geist_Mono } from "next/font/google";
 import { z } from "zod";
+import { IssuesList } from "@/components/issues-list";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -25,13 +26,13 @@ const githubTool: TamboTool = {
     .args(z.object({
       filters: z.object({
         state: z.enum(['open', 'closed', 'all']).optional(),
-        title: z.string().optional(),
-        body: z.string().optional(),
-        created_after: z.string().optional(),
-        created_before: z.string().optional(),
-        updated_after: z.string().optional(),
-        updated_before: z.string().optional(),
-        comments: z.number().optional()
+        title: z.string().describe("The title of the issue contains this string").optional(),
+        body: z.string().describe("The body of the issue contains this string").optional(),
+        created_after: z.string().describe("The issue was created after this date").optional(),
+        created_before: z.string().describe("The issue was created before this date").optional(),
+        updated_after: z.string().describe("The issue was updated after this date").optional(),
+        updated_before: z.string().describe("The issue was updated before this date").optional(),
+        comments: z.number().describe("The issue has this many comments").optional()
       }).optional()
     }))
     .returns(z.array(z.object({
