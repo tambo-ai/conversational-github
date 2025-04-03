@@ -1,7 +1,6 @@
 "use client";
 
 import { MessageInput } from "@/components/ui/message-input";
-import { MessageSuggestions } from "@/components/ui/message-suggestions";
 import { ThreadContent } from "@/components/ui/thread-content";
 import { cn } from "@/lib/utils";
 import { useTambo } from "@tambo-ai/react";
@@ -58,7 +57,7 @@ const MessageThreadFull = React.forwardRef<
       >
         <ThreadContent className="py-4" />
       </div>
-      <MessageSuggestions />
+      {/* <MessageSuggestions /> */}
       <div className="p-4 border-t border-gray-200">
         <MessageInput contextKey={contextKey} />
       </div>

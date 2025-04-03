@@ -35,8 +35,11 @@ export function GitHubAuth() {
   }
 
   return (
-    <Button onClick={handleLogin}>
-      Connect with GitHub
-    </Button>
+    <div className="flex flex-col gap-2">
+      <Button onClick={handleLogin}>
+        Connect with GitHub
+      </Button>
+      <p className="text-sm text-muted-foreground">Talk to your GitHub issues</p>
+    </div>
   );
 } 
