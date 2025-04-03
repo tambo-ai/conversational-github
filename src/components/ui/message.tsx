@@ -1,11 +1,11 @@
 "use client";
 
-import * as React from "react";
-import ReactMarkdown from "react-markdown";
+import { createMarkdownComponents } from "@/components/ui/markdownComponents";
+import { cn } from "@/lib/utils";
 import type { TamboThreadMessage } from "@tambo-ai/react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
-import { createMarkdownComponents } from "@/components/ui/markdownComponents";
+import * as React from "react";
+import ReactMarkdown from "react-markdown";
 
 /**
  * Represents a message component
@@ -118,11 +118,7 @@ const Message = React.forwardRef<HTMLDivElement, MessageProps>(
               )}
             </div>
           </div>
-          {message.renderedComponent && role === "assistant" && (
-            <div className="mt-4 w-full max-w-md">
-              {message.renderedComponent}
-            </div>
-          )}
+
         </div>
       </div>
     );

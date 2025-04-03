@@ -35,6 +35,9 @@ export interface Repository {
 }
 
 export async function getIssues(repo: Repository): Promise<Issue[]> {
+  if (!repo.owner || !repo.repo) {
+    throw new Error("Repository owner and repo are required");
+  }
   const response = await octokit.issues.listForRepo({
     owner: repo.owner,
     repo: repo.repo,
