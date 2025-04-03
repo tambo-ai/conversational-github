@@ -16,9 +16,8 @@ export function CanvasSpace({ className }: CanvasSpaceProps) {
   return (
     <div className={`bg-white rounded-lg p-4 h-[calc(100vh-4rem)] overflow-auto ${className}`}>
       <div className="w-full min-h-full flex items-center justify-center text-gray-500">
-        {thread?.messages?.length > 0 &&
-          thread.messages[thread.messages.length - 1].renderedComponent ? (
-          thread.messages[thread.messages.length - 1].renderedComponent
+        {thread?.messages?.findLast(msg => msg.renderedComponent) ? (
+          thread.messages.findLast(msg => msg.renderedComponent)?.renderedComponent
         ) : (
           <div className="text-center">
             <p className="text-lg font-medium">No rendered component to display</p>
