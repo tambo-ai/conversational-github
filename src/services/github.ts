@@ -1,9 +1,14 @@
+import { useAuthStore } from '@/store/auth-store';
 import { useRepositoryStore } from '@/store/repository-store';
 import { Octokit } from '@octokit/rest';
 
-const octokit = new Octokit({
-  auth: process.env.NEXT_PUBLIC_GITHUB_TOKEN,
-});
+// Create a function to get an Octokit instance with the current auth token
+const getOctokit = () => {
+  const { accessToken } = useAuthStore.getState();
+  return new Octokit({
+    auth: accessToken,
+  });
+};
 
 export interface Issue {
   number: number;
@@ -51,7 +56,7 @@ export async function getIssues(filters?: IssueFilters): Promise<Issue[]> {
   if (!selectedRepository?.owner || !selectedRepository?.repo) {
     throw new Error("Repository owner and repo are required");
   }
-  const response = await octokit.issues.listForRepo({
+  const response = await getOctokit().issues.listForRepo({
     owner: selectedRepository.owner,
     repo: selectedRepository.repo,
     state: filters?.state || 'all',
@@ -92,7 +97,7 @@ export async function getIssues(filters?: IssueFilters): Promise<Issue[]> {
 }
 
 export async function getIssue(repo: Repository, issueNumber: number): Promise<Issue> {
-  const response = await octokit.issues.get({
+  const response = await getOctokit().issues.get({
     owner: repo.owner,
     repo: repo.repo,
     issue_number: issueNumber,
@@ -101,7 +106,7 @@ export async function getIssue(repo: Repository, issueNumber: number): Promise<I
 }
 
 export async function createIssue(repo: Repository, title: string, body: string): Promise<Issue> {
-  const response = await octokit.issues.create({
+  const response = await getOctokit().issues.create({
     owner: repo.owner,
     repo: repo.repo,
     title,
@@ -111,7 +116,7 @@ export async function createIssue(repo: Repository, title: string, body: string)
 }
 
 export async function updateIssue(repo: Repository, issueNumber: number, title: string, body: string): Promise<Issue> {
-  const response = await octokit.issues.update({
+  const response = await getOctokit().issues.update({
     owner: repo.owner,
     repo: repo.repo,
     issue_number: issueNumber,
@@ -122,7 +127,7 @@ export async function updateIssue(repo: Repository, issueNumber: number, title: 
 }
 
 export async function closeIssue(repo: Repository, issueNumber: number): Promise<Issue> {
-  const response = await octokit.issues.update({
+  const response = await getOctokit().issues.update({
     owner: repo.owner,
     repo: repo.repo,
     issue_number: issueNumber,
@@ -132,6 +137,7 @@ export async function closeIssue(repo: Repository, issueNumber: number): Promise
 }
 
 export async function getRepositories(): Promise<Repository[]> {
+  const octokit = getOctokit();
   const response = await octokit.repos.listForAuthenticatedUser({
     sort: 'updated',
     per_page: 100,
@@ -147,7 +153,7 @@ export async function getRepositories(): Promise<Repository[]> {
 }
 
 export async function getComments(repo: Repository, issueNumber: number): Promise<Comment[]> {
-  const response = await octokit.issues.listComments({
+  const response = await getOctokit().issues.listComments({
     owner: repo.owner,
     repo: repo.repo,
     issue_number: issueNumber,
