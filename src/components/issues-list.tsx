@@ -68,7 +68,7 @@ export const GitHubIssues: React.FC = () => {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-w-xl mx-auto">
 
       <div className="space-y-4">
         {issues.map((issue) => (

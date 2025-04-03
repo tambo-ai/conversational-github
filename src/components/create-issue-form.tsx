@@ -17,6 +17,7 @@ export const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ onSubmit }) =>
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <h2 className="text-lg font-semibold">Create Issue</h2>
       <div>
         <input
           type="text"
