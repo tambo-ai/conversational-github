@@ -1,4 +1,5 @@
 import { useRepositoryStore } from '@/store/repository-store';
+import { GenerationStage, useTamboThread } from '@tambo-ai/react';
 import React, { useEffect, useState } from 'react';
 import { closeIssue, createIssue, getIssues, Issue, IssueFilters } from '../services/github';
 import { CreateIssueForm } from './create-issue-form';
@@ -14,9 +15,9 @@ export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const { selectedRepository } = useRepositoryStore();
-
+  const { generationStage } = useTamboThread();
   useEffect(() => {
-    if (selectedRepository) {
+    if (selectedRepository && generationStage === GenerationStage.COMPLETE) {
       loadIssues();
     }
   }, [selectedRepository, filters]);
@@ -70,7 +71,33 @@ export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
   };
 
   if (!selectedRepository) return null;
-  if (loading) return <div>Loading issues...</div>;
+  if (loading) {
+    const activeFilters = [];
+    if (filters?.state) activeFilters.push(`State: ${filters.state}`);
+    if (filters?.title) activeFilters.push(`Title contains: "${filters.title}"`);
+    if (filters?.body) activeFilters.push(`Body contains: "${filters.body}"`);
+    if (filters?.created_after) activeFilters.push(`Created after: ${filters.created_after}`);
+    if (filters?.created_before) activeFilters.push(`Created before: ${filters.created_before}`);
+    if (filters?.updated_after) activeFilters.push(`Updated after: ${filters.updated_after}`);
+    if (filters?.updated_before) activeFilters.push(`Updated before: ${filters.updated_before}`);
+    if (filters?.comments !== undefined) activeFilters.push(`Comments: ${filters.comments}`);
+
+    return (
+      <div className="space-y-2">
+        <div>Loading issues...</div>
+        {activeFilters.length > 0 && (
+          <div className="text-sm text-muted-foreground">
+            <div>Applying filters:</div>
+            <ul className="list-disc pl-5 mt-1">
+              {activeFilters.map((filter, index) => (
+                <li key={index}>{filter}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    );
+  }
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (

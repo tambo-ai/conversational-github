@@ -1,8 +1,8 @@
 'use client'
 import { IssueItem } from "@/components/issue-item";
-import { IssuesList } from "@/components/issues-list";
 import { getIssues } from "@/services/github";
 import { TamboProvider, TamboTool, type TamboComponent } from "@tambo-ai/react";
+import { IssuesList } from "@/components/issues-list";
 import { Geist, Geist_Mono } from "next/font/google";
 import { z } from "zod";
 import "./globals.css";
