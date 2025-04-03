@@ -160,4 +160,14 @@ export async function getComments(repo: Repository, issueNumber: number): Promis
     per_page: 100,
   });
   return response.data as Comment[];
+}
+
+export async function createComment(repo: Repository, issueNumber: number, body: string): Promise<Comment> {
+  const response = await getOctokit().issues.createComment({
+    owner: repo.owner,
+    repo: repo.repo,
+    issue_number: issueNumber,
+    body,
+  });
+  return response.data as Comment;
 } 

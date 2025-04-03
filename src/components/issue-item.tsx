@@ -1,8 +1,8 @@
 'use client';
 import { useRepositoryStore } from '@/store/repository-store';
-import { ChevronDown, ChevronUp, MessageSquare } from 'lucide-react';
+import { ChevronDown, ChevronUp, MessageSquare, X } from 'lucide-react';
 import React, { useState } from 'react';
-import { closeIssue, Comment, getComments, Issue } from '../services/github';
+import { closeIssue, Comment, createComment, getComments, Issue } from '../services/github';
 
 interface IssueItemProps {
   issue?: Issue;
@@ -25,6 +25,8 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoadingComments, setIsLoadingComments] = useState(false);
+  const [newComment, setNewComment] = useState('');
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const { selectedRepository } = useRepositoryStore();
 
   const truncatedBody = issue.body && issue.body.length > MAX_DESCRIPTION_LENGTH
@@ -60,6 +62,22 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
     }
   };
 
+  const handleSubmitComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedRepository || !newComment.trim()) return;
+
+    setIsSubmittingComment(true);
+    try {
+      const comment = await createComment(selectedRepository, issue.number, newComment);
+      setComments([...comments, comment]);
+      setNewComment('');
+    } catch (error) {
+      console.error('Failed to create comment:', error);
+    } finally {
+      setIsSubmittingComment(false);
+    }
+  };
+
   return (
     <div className="p-4 rounded-lg border bg-background text-foreground border-border">
       <div className="flex justify-between items-start">
@@ -71,7 +89,7 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
       </div>
 
       <div className="mt-2">
-        <p className="text-muted-foreground">
+        <p className="text-muted-foreground text-left">
           {isDescriptionExpanded ? issue.body : truncatedBody}
         </p>
         {issue.body && issue.body.length > MAX_DESCRIPTION_LENGTH && (
@@ -104,9 +122,10 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
         {issue.state === 'open' && (
           <button
             onClick={() => onCloseIssue ? onCloseIssue(issue.number) : handleCloseIssue(issue.number)}
-            className="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90"
+            className="ml-auto flex items-center gap-1 text-sm text-red-500 hover:text-red-600"
           >
-            Close Issue
+            <X className="w-4 h-4" />
+            <span>close issue</span>
           </button>
         )}
       </div>
@@ -132,11 +151,29 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
                       {new Date(comment.created_at).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className="text-sm">{comment.body}</p>
+                  <p className="text-sm text-left">{comment.body}</p>
                 </div>
               ))}
             </div>
           )}
+
+          <form onSubmit={handleSubmitComment} className="mt-4">
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Add a comment..."
+              className="w-full p-2 rounded-lg border bg-background text-foreground border-border mb-2"
+              rows={2}
+              required
+            />
+            <button
+              type="submit"
+              disabled={isSubmittingComment}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50"
+            >
+              {isSubmittingComment ? 'Posting...' : 'Post Comment'}
+            </button>
+          </form>
         </div>
       )}
     </div>
