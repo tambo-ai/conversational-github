@@ -14,6 +14,16 @@ export interface Issue {
   html_url: string;
 }
 
+export interface Comment {
+  id: number;
+  body: string;
+  created_at: string;
+  user: {
+    login: string;
+    avatar_url: string;
+  };
+}
+
 export interface Repository {
   owner: string;
   repo: string;
@@ -86,4 +96,14 @@ export async function getRepositories(): Promise<Repository[]> {
     description: repo.description,
     html_url: repo.html_url,
   }));
+}
+
+export async function getComments(repo: Repository, issueNumber: number): Promise<Comment[]> {
+  const response = await octokit.issues.listComments({
+    owner: repo.owner,
+    repo: repo.repo,
+    issue_number: issueNumber,
+    per_page: 100,
+  });
+  return response.data as Comment[];
 } 

@@ -1,6 +1,6 @@
 'use client'
-import { ProductCard } from "@/components/product-card";
-import { getProducts } from "@/services/product-service";
+import { GitHubIssues } from "@/components/issues-list";
+import { getIssues } from "@/services/github";
 import { TamboProvider, TamboTool, type TamboComponent } from "@tambo-ai/react";
 import { Geist, Geist_Mono } from "next/font/google";
 import { z } from "zod";
@@ -16,38 +16,28 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const productsTool: TamboTool = {
-  name: "products",
-  description: "A tool to get products from the database",
-  tool: getProducts,
+const githubTool: TamboTool = {
+  name: "github",
+  description: "A tool to get issues from a GitHub repository",
+  tool: getIssues,
   toolSchema: z.function().returns(z.array(z.object({
     id: z.string(),
-    name: z.string(),
-    description: z.string(),
-    price: z.number(),
-    discountPercentage: z.number().optional(),
-    accentColor: z.string(),
-    inStock: z.boolean().optional()
+    title: z.string(),
+    body: z.string(),
+    state: z.string(),
+    created_at: z.string(),
+    updated_at: z.string(),
   })))
 }
 
 const tamboComponents: TamboComponent[] = [
   {
-    name: "ProductCard",
-    description: "A product card component that displays product information with customizable pricing, discounts, and styling. Perfect for demonstrating interactive UI elements!",
-    component: ProductCard,
+    name: "github-issues-list",
+    description: "A list of issues from a GitHub repository",
+    component: GitHubIssues,
     propsDefinition: {
-      name: "string",
-      price: "number",
-      description: "string",
-      discountPercentage: "number",
-      accentColor: {
-        type: "enum",
-        options: ["indigo", "emerald", "rose", "amber"]
-      },
-      inStock: "boolean"
     },
-    associatedTools: [productsTool]
+    associatedTools: [githubTool]
   },
 ];
 
