@@ -12,10 +12,12 @@ export default function Home() {
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start w-full max-w-4xl">
         <RepositorySelector />
         {selectedRepository && <MessageThreadFull />}
-        <button onClick={async () => {
-          const issues = await getIssues(selectedRepository!);
-          console.log(issues);
-        }}>Get Issues</button>
+        {selectedRepository && (
+          <button onClick={async () => {
+            const issues = await getIssues(selectedRepository);
+            console.log(issues);
+          }}>Get Issues</button>
+        )}
       </main>
     </div>
   );

@@ -78,7 +78,7 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue, onCloseIssue }) => 
           className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
           <MessageSquare className="w-4 h-4" />
-          <span>Comments {comments.length > 0 && `(${comments.length})`}</span>
+          <span>Comments {issue.comments > 0 && `(${issue.comments})`}</span>
         </button>
 
         {issue.state === 'open' && (
