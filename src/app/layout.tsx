@@ -1,6 +1,6 @@
 'use client'
 import { IssueItem } from "@/components/issue-item";
-import { GitHubIssues } from "@/components/issues-list";
+import { IssuesList } from "@/components/issues-list";
 import { getIssues } from "@/services/github";
 import { TamboProvider, TamboTool, type TamboComponent } from "@tambo-ai/react";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -76,7 +76,7 @@ const tamboComponents: TamboComponent[] = [
   {
     name: "github-issues-list",
     description: "A list of issues from a GitHub repository. Use this when the user wants to view a list of issues.",
-    component: GitHubIssues,
+    component: IssuesList,
     propsDefinition: {
       filters: githubFiltersSchemaString
     },

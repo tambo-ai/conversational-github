@@ -4,14 +4,15 @@ import { closeIssue, createIssue, getIssues, Issue, IssueFilters } from '../serv
 import { CreateIssueForm } from './create-issue-form';
 import { IssueItem } from './issue-item';
 
-interface GitHubIssuesProps {
+interface IssuesListProps {
   filters?: IssueFilters;
 }
 
-export const GitHubIssues: React.FC<GitHubIssuesProps> = ({ filters }) => {
+export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const { selectedRepository } = useRepositoryStore();
 
   useEffect(() => {
@@ -45,6 +46,7 @@ export const GitHubIssues: React.FC<GitHubIssuesProps> = ({ filters }) => {
         body
       );
       setIssues([newIssue, ...issues]);
+      setShowCreateForm(false);
     } catch (err) {
       setError('Failed to create issue');
       console.error(err);
@@ -73,6 +75,20 @@ export const GitHubIssues: React.FC<GitHubIssuesProps> = ({ filters }) => {
 
   return (
     <div className="space-y-4 max-w-xl mx-auto">
+      <div className="flex justify-end">
+        <button
+          onClick={() => setShowCreateForm(!showCreateForm)}
+          className="text-gray-600 hover:text-gray-800 font-medium cursor-pointer"
+        >
+          {showCreateForm ? '× Cancel' : '+ Add Issue'}
+        </button>
+      </div>
+
+      {showCreateForm && (
+        <div className="mb-4">
+          <CreateIssueForm onSubmit={handleCreateIssue} />
+        </div>
+      )}
 
       <div className="space-y-4">
         {issues.map((issue) => (
@@ -83,7 +99,6 @@ export const GitHubIssues: React.FC<GitHubIssuesProps> = ({ filters }) => {
           />
         ))}
       </div>
-      <CreateIssueForm onSubmit={handleCreateIssue} />
     </div>
   );
 }; 
