@@ -1,6 +1,7 @@
 "use client";
 
 import { useTamboThread } from "@tambo-ai/react";
+import { IssuesList } from "../issues-list";
 
 interface CanvasSpaceProps {
   className?: string;
@@ -16,8 +17,7 @@ export function CanvasSpace({ className }: CanvasSpaceProps) {
           thread.messages.findLast(msg => msg.renderedComponent)?.renderedComponent
         ) : (
           <div className="text-center">
-            <p className="text-lg font-medium">No rendered component to display</p>
-            <p className="text-sm text-gray-400 mt-2">The latest message's rendered component will appear here</p>
+            <IssuesList />
           </div>
         )}
       </div>

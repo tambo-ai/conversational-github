@@ -3,7 +3,6 @@
 import { MessageInput } from "@/components/ui/message-input";
 import { MessageSuggestions } from "@/components/ui/message-suggestions";
 import { ThreadContent } from "@/components/ui/thread-content";
-import { ThreadHistory } from "@/components/ui/thread-history";
 import { cn } from "@/lib/utils";
 import { useTambo } from "@tambo-ai/react";
 import * as React from "react";
@@ -52,10 +51,7 @@ const MessageThreadFull = React.forwardRef<
       )}
       {...props}
     >
-      <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-        <h2 className="font-semibold text-lg">Use AI</h2>
-        <ThreadHistory contextKey={contextKey} />
-      </div>
+
       <div
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto px-4 [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-thumb]:bg-gray-300"
