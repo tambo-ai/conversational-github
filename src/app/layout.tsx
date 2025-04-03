@@ -21,19 +21,21 @@ const githubTool: TamboTool = {
   description: "A tool to get issues from a GitHub repository",
   tool: getIssues,
   toolSchema: z.function().returns(z.array(z.object({
-    id: z.string(),
+    number: z.number(),
     title: z.string(),
-    body: z.string(),
+    body: z.string().nullable(),
     state: z.string(),
     created_at: z.string(),
     updated_at: z.string(),
+    html_url: z.string(),
+    comments: z.number(),
   })))
 }
 
 const tamboComponents: TamboComponent[] = [
   {
     name: "github-issues-list",
-    description: "A list of issues from a GitHub repository",
+    description: "A list of issues from a GitHub repository. Do not try and generate props.",
     component: GitHubIssues,
     propsDefinition: {
     },

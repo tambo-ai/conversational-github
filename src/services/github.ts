@@ -1,3 +1,4 @@
+import { useRepositoryStore } from '@/store/repository-store';
 import { Octokit } from '@octokit/rest';
 
 const octokit = new Octokit({
@@ -34,13 +35,14 @@ export interface Repository {
   html_url: string;
 }
 
-export async function getIssues(repo: Repository): Promise<Issue[]> {
-  if (!repo.owner || !repo.repo) {
+export async function getIssues(): Promise<Issue[]> {
+  const { selectedRepository } = useRepositoryStore.getState();
+  if (!selectedRepository?.owner || !selectedRepository?.repo) {
     throw new Error("Repository owner and repo are required");
   }
   const response = await octokit.issues.listForRepo({
-    owner: repo.owner,
-    repo: repo.repo,
+    owner: selectedRepository.owner,
+    repo: selectedRepository.repo,
     state: 'all',
     per_page: 100,
   });
