@@ -63,7 +63,7 @@ export async function getIssues(filters?: IssueFilters): Promise<Issue[]> {
     per_page: 100,
   });
 
-  let filteredIssues = response.data as Issue[];
+  let filteredIssues = response.data.filter(issue => !issue.pull_request) as Issue[];
 
   // Apply additional filters
   if (filters) {

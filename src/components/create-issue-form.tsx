@@ -1,16 +1,41 @@
-import React, { useState } from 'react';
+'use client';
+import { createIssue } from '@/services/github';
+import { useRepositoryStore } from '@/store/repository-store';
+import React, { useEffect, useState } from 'react';
 
 interface CreateIssueFormProps {
-  onSubmit: (title: string, body: string) => Promise<void>;
+  onSubmit?: (title: string, body: string) => Promise<void>;
+  initialTitle?: string;
+  initialBody?: string;
 }
 
-export const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ onSubmit }) => {
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+export const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ onSubmit, initialTitle = '', initialBody = '' }) => {
+  const [title, setTitle] = useState(initialTitle);
+  const [body, setBody] = useState(initialBody);
+  const { selectedRepository } = useRepositoryStore();
+
+  useEffect(() => {
+    setTitle(initialTitle);
+    setBody(initialBody);
+  }, [initialTitle, initialBody]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit(title, body);
+    if (onSubmit) {
+      return await onSubmit(title, body);
+    }
+
+    try {
+      if (!selectedRepository) return;
+
+      const newIssue = await createIssue(
+        selectedRepository,
+        title,
+        body
+      );
+    } catch (err) {
+      console.error(err);
+    }
     setTitle('');
     setBody('');
   };

@@ -1,11 +1,13 @@
 'use client'
-import { IssueItem } from "@/components/issue-item";
+
 import { getIssues } from "@/services/github";
 import { TamboProvider, TamboTool, type TamboComponent } from "@tambo-ai/react";
+
+import { CreateIssueForm } from "@/components/create-issue-form";
+import { IssueItem } from "@/components/issue-item";
+import { IssuesList } from "@/components/issues-list";
 import { Geist, Geist_Mono } from "next/font/google";
 import { z } from "zod";
-import { IssuesList } from "@/components/issues-list";
-
 import "./globals.css";
 
 const geistSans = Geist({
@@ -89,6 +91,16 @@ const tamboComponents: TamboComponent[] = [
     component: IssueItem,
     propsDefinition: {
       issue: githubIssueSchemaString
+    },
+    associatedTools: [githubTool]
+  },
+  {
+    name: "github-create-issue-form",
+    description: "A form to create a new issue in a GitHub repository. Use this when the user wants to create a new issue.",
+    component: CreateIssueForm,
+    propsDefinition: {
+      initialTitle: z.string().describe("The initial title of the issue to create").optional(),
+      initialBody: z.string().describe("The initial body of the issue to create").optional()
     },
     associatedTools: [githubTool]
   }

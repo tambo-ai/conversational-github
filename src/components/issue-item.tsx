@@ -122,7 +122,7 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
         {issue.state === 'open' && (
           <button
             onClick={() => onCloseIssue ? onCloseIssue(issue.number) : handleCloseIssue(issue.number)}
-            className="ml-auto flex items-center gap-1 text-sm text-red-500 hover:text-red-600"
+            className="ml-auto flex items-center gap-1 text-sm text-red-500 hover:text-red-600 cursor-pointer"
           >
             <X className="w-4 h-4" />
             <span>close issue</span>
