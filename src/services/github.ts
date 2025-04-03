@@ -35,7 +35,18 @@ export interface Repository {
   html_url: string;
 }
 
-export async function getIssues(): Promise<Issue[]> {
+export interface IssueFilters {
+  state?: 'open' | 'closed' | 'all';
+  title?: string;
+  body?: string;
+  created_after?: string;
+  created_before?: string;
+  updated_after?: string;
+  updated_before?: string;
+  comments?: number;
+}
+
+export async function getIssues(filters?: IssueFilters): Promise<Issue[]> {
   const { selectedRepository } = useRepositoryStore.getState();
   if (!selectedRepository?.owner || !selectedRepository?.repo) {
     throw new Error("Repository owner and repo are required");
@@ -43,10 +54,41 @@ export async function getIssues(): Promise<Issue[]> {
   const response = await octokit.issues.listForRepo({
     owner: selectedRepository.owner,
     repo: selectedRepository.repo,
-    state: 'all',
+    state: filters?.state || 'all',
     per_page: 100,
   });
-  return response.data as Issue[];
+
+  let filteredIssues = response.data as Issue[];
+
+  // Apply additional filters
+  if (filters) {
+    filteredIssues = filteredIssues.filter(issue => {
+      if (filters.title && !issue.title.toLowerCase().includes(filters.title.toLowerCase())) {
+        return false;
+      }
+      if (filters.body && issue.body && !issue.body.toLowerCase().includes(filters.body.toLowerCase())) {
+        return false;
+      }
+      if (filters.created_after && new Date(issue.created_at) < new Date(filters.created_after)) {
+        return false;
+      }
+      if (filters.created_before && new Date(issue.created_at) > new Date(filters.created_before)) {
+        return false;
+      }
+      if (filters.updated_after && new Date(issue.updated_at) < new Date(filters.updated_after)) {
+        return false;
+      }
+      if (filters.updated_before && new Date(issue.updated_at) > new Date(filters.updated_before)) {
+        return false;
+      }
+      if (filters.comments !== undefined && issue.comments !== filters.comments) {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  return filteredIssues;
 }
 
 export async function getIssue(repo: Repository, issueNumber: number): Promise<Issue> {

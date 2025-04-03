@@ -21,17 +21,30 @@ const githubTool: TamboTool = {
   name: "github",
   description: "A tool to get issues from a GitHub repository",
   tool: getIssues,
-  toolSchema: z.function().returns(z.array(z.object({
-    number: z.number(),
-    title: z.string(),
-    body: z.string().nullable(),
-    state: z.string(),
-    created_at: z.string(),
-    updated_at: z.string(),
-    html_url: z.string(),
-    comments: z.number(),
-  })))
-}
+  toolSchema: z.function()
+    .args(z.object({
+      filters: z.object({
+        state: z.enum(['open', 'closed', 'all']).optional(),
+        title: z.string().optional(),
+        body: z.string().optional(),
+        created_after: z.string().optional(),
+        created_before: z.string().optional(),
+        updated_after: z.string().optional(),
+        updated_before: z.string().optional(),
+        comments: z.number().optional()
+      }).optional()
+    }))
+    .returns(z.array(z.object({
+      number: z.number(),
+      title: z.string(),
+      body: z.string().nullable(),
+      state: z.string(),
+      created_at: z.string(),
+      updated_at: z.string(),
+      html_url: z.string(),
+      comments: z.number()
+    })))
+};
 
 const githubIssueSchemaString = `
   {
@@ -42,7 +55,20 @@ const githubIssueSchemaString = `
     created_at: string,
     updated_at: string,
     html_url: string,
-    comments: number,
+    comments: number
+  }
+`;
+
+const githubFiltersSchemaString = `
+  {
+    state?: 'open' | 'closed' | 'all',
+    title?: string,
+    body?: string,
+    created_after?: string,
+    created_before?: string,
+    updated_after?: string,
+    updated_before?: string,
+    comments?: number
   }
 `;
 
@@ -52,6 +78,7 @@ const tamboComponents: TamboComponent[] = [
     description: "A list of issues from a GitHub repository. Use this when the user wants to view a list of issues.",
     component: GitHubIssues,
     propsDefinition: {
+      filters: githubFiltersSchemaString
     },
     associatedTools: [githubTool]
   },

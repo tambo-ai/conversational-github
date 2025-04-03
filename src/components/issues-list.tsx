@@ -1,10 +1,14 @@
 import { useRepositoryStore } from '@/store/repository-store';
 import React, { useEffect, useState } from 'react';
-import { Issue, closeIssue, createIssue, getIssues } from '../services/github';
+import { closeIssue, createIssue, getIssues, Issue, IssueFilters } from '../services/github';
 import { CreateIssueForm } from './create-issue-form';
 import { IssueItem } from './issue-item';
 
-export const GitHubIssues: React.FC = () => {
+interface GitHubIssuesProps {
+  filters?: IssueFilters;
+}
+
+export const GitHubIssues: React.FC<GitHubIssuesProps> = ({ filters }) => {
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -14,14 +18,14 @@ export const GitHubIssues: React.FC = () => {
     if (selectedRepository) {
       loadIssues();
     }
-  }, [selectedRepository]);
+  }, [selectedRepository, filters]);
 
   const loadIssues = async () => {
     if (!selectedRepository) return;
 
     try {
       setLoading(true);
-      const fetchedIssues = await getIssues();
+      const fetchedIssues = await getIssues(filters);
       setIssues(fetchedIssues);
     } catch (err) {
       setError('Failed to load issues');

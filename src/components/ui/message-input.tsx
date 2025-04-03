@@ -1,9 +1,9 @@
 "use client";
 
-import * as React from "react";
 import { cn } from "@/lib/utils";
 import { useTamboThreadInput } from "@tambo-ai/react";
 import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 
 const messageInputVariants = cva("w-full", {
   variants: {
@@ -129,24 +129,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>(
           >
             {isPending ? <Spinner /> : "Send"}
           </button>
-        </div>
-        <div className="flex flex-col items-center mt-2 text-xs">
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <span>Press</span>
-            <kbd className="px-1.5 py-0.5 rounded border border-border bg-muted font-mono text-xs">
-              {modKey}
-            </kbd>
-            <span>+</span>
-            <kbd className="px-1.5 py-0.5 rounded border border-border bg-muted font-mono text-xs">
-              Enter
-            </kbd>
-            <span>to send</span>
-          </div>
-          {(error ?? submitError) && (
-            <p className="text-sm text-[hsl(var(--destructive))] mt-1">
-              {error?.message ?? submitError}
-            </p>
-          )}
         </div>
       </form>
     );
