@@ -78,6 +78,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>(
           streamResponse: true,
         });
         setValue("");
+
       } catch (error) {
         console.error("Failed to submit message:", error);
         setDisplayValue(value);
@@ -118,7 +119,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>(
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             className="flex-1 p-2 rounded-lg border bg-background text-foreground border-border"
-            disabled={isPending}
             placeholder="Type your message..."
             aria-label="Chat Message Input"
           />

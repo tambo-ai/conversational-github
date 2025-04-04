@@ -104,7 +104,7 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
   };
 
   return (
-    <div className="p-4 rounded-lg border bg-background text-foreground border-border">
+    <div className="p-4 rounded-lg border bg-background text-foreground border-border max-w-xl">
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-2">
           <h3 className="text-lg font-semibold">{issue.title}</h3>
