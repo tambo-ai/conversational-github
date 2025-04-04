@@ -125,6 +125,7 @@ export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
               key={issue.number}
               issue={issue}
               onCloseIssue={handleCloseIssue}
+              isDescriptionExpandedByDefault={false}
             />
           ))
         ) : (

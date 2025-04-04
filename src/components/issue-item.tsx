@@ -8,6 +8,7 @@ interface IssueItemProps {
   issue?: Issue;
   commentsOpen?: boolean;
   onCloseIssue?: (issueNumber: number) => Promise<void>;
+  isDescriptionExpandedByDefault?: boolean;
 }
 
 const MAX_DESCRIPTION_LENGTH = 150;
@@ -21,8 +22,8 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
   updated_at: '',
   html_url: '',
   comments: 0,
-}, onCloseIssue, commentsOpen = false }) => {
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+}, onCloseIssue, commentsOpen = false, isDescriptionExpandedByDefault = true }) => {
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(isDescriptionExpandedByDefault);
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(commentsOpen);
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoadingComments, setIsLoadingComments] = useState(false);
