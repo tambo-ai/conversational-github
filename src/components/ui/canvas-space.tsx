@@ -11,7 +11,7 @@ export function CanvasSpace({ className }: CanvasSpaceProps) {
   const { thread } = useTamboThread();
 
   return (
-    <div className={`bg-white rounded-lg p-4 h-[calc(100vh-4rem)] overflow-auto ${className}`}>
+    <div className={` rounded-lg p-4 h-[calc(100vh-4rem)] overflow-auto ${className}`}>
       <div className="w-full min-h-full flex items-center justify-center text-gray-500">
         {thread?.messages?.findLast(msg => msg.renderedComponent) ? (
           thread.messages.findLast(msg => msg.renderedComponent)?.renderedComponent

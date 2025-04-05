@@ -43,7 +43,7 @@ const MessageThreadFull = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "flex flex-col bg-white rounded-lg overflow-hidden bg-background ",
+        "flex flex-col rounded-lg overflow-hidden  ",
         "h-[90vh] sm:h-[85vh] md:h-[80vh]",
         "w-full max-w-full sm:max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto",
         className,
@@ -58,7 +58,7 @@ const MessageThreadFull = React.forwardRef<
         <ThreadContent className="py-4" />
       </div>
       {/* <MessageSuggestions /> */}
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 rounded-md">
         <MessageInput contextKey={contextKey} />
       </div>
     </div>

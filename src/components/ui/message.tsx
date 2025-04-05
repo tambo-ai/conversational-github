@@ -46,8 +46,8 @@ const bubbleVariants = cva(
   {
     variants: {
       role: {
-        user: "bg-primary text-primary-foreground hover:bg-primary/90",
-        assistant: "bg-muted text-foreground hover:bg-muted/90",
+        user: "bg-none text-blue-400 hover:bg-muted/90",
+        assistant: "bg-none text-foreground hover:bg-muted/90",
       },
     },
     defaultVariants: {

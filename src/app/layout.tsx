@@ -111,8 +111,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans`}>
+    <html lang="en" className="dark bg-zinc-900">
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans min-h-screen bg-zinc-900 text-foreground`}>
         <TamboProvider
           apiKey={process.env.NEXT_PUBLIC_TAMBO_API_KEY!}
           components={tamboComponents}

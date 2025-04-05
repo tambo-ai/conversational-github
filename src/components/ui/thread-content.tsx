@@ -1,10 +1,10 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import * as React from "react";
 import { Message } from "@/components/ui/message";
+import { cn } from "@/lib/utils";
 import { useTambo } from "@tambo-ai/react";
 import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 
 const threadContentVariants = cva("flex flex-col gap-4", {
   variants: {
@@ -39,14 +39,33 @@ const ThreadContent = React.forwardRef<HTMLDivElement, ThreadContentProps>(
     const messages = thread?.messages ?? [];
     const isGenerating = generationStage === "STREAMING_RESPONSE";
 
+    // Find latest messages for each role
+    const latestUserMessage = [...messages].reverse().find(m => m.role === "user");
+    const latestAssistantMessage = [...messages].reverse().find(m =>
+      m.role === "assistant" || m.role === "hydra"
+    );
+
+    // Determine which messages to show
+    const messagesToShow = [];
+    if (latestUserMessage) {
+      messagesToShow.push(latestUserMessage);
+      // Show assistant message if it came AFTER the latest user message
+      if (latestAssistantMessage &&
+        latestAssistantMessage.createdAt &&
+        latestUserMessage.createdAt &&
+        latestAssistantMessage.createdAt > latestUserMessage.createdAt) {
+        messagesToShow.push(latestAssistantMessage);
+      }
+    }
+
     return (
       <div
         ref={ref}
         className={cn(threadContentVariants({ variant }), className)}
         {...props}
       >
-        {messages.map((message, index) => {
-          const showLoading = isGenerating && index === messages.length - 1;
+        {messagesToShow.map((message, index) => {
+          const showLoading = isGenerating && index === messagesToShow.length - 1;
           const messageContent = Array.isArray(message.content)
             ? (message.content[0]?.text ?? "Empty message")
             : typeof message.content === "string"
@@ -55,16 +74,30 @@ const ThreadContent = React.forwardRef<HTMLDivElement, ThreadContentProps>(
 
           return (
             <div
-              key={
-                message.id ??
-                `${message.role}-${message.createdAt ?? Date.now()}-${message.content?.toString().substring(0, 10)}`
-              }
+              key={message.id ?? `${message.role}-${message.createdAt}`}
               className={cn(
                 "animate-in fade-in-0 slide-in-from-bottom-2",
-                "duration-200 ease-in-out",
+                "duration-500 ease-in-out",
+                "opacity-0 animate-fade-in"
               )}
-              style={{ animationDelay: `${index * 40}ms` }}
+              style={{
+                animationDelay: `${index * 100}ms`,
+                animationFillMode: "forwards",
+                animation: "fadeIn 500ms ease-in-out forwards"
+              }}
             >
+              <style jsx>{`
+                @keyframes fadeIn {
+                  from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                  }
+                  to {
+                    opacity: 1;
+                    transform: translateY(0);
+                  }
+                }
+              `}</style>
               <div
                 className={cn(
                   "flex flex-col gap-1.5",

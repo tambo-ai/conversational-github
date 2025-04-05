@@ -13,14 +13,14 @@ export default function Home() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-zinc-900">
         <GitHubAuth />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="min-h-screen p-8 pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-zinc-900">
       <main className="flex flex-row gap-8 w-full max-w-[2000px] mx-auto">
         <div className="flex flex-col gap-4 w-[500px] flex-shrink-0">
           <GitHubAuth />
