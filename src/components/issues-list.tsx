@@ -18,7 +18,6 @@ export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
   const { generationStage } = useTamboThread();
   useEffect(() => {
     if (selectedRepository && (generationStage === GenerationStage.COMPLETE || generationStage === GenerationStage.IDLE)) {
-      console.log("loading issues");
       loadIssues();
     }
   }, [selectedRepository, filters]);
