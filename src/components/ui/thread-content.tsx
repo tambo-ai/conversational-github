@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useTambo } from "@tambo-ai/react";
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
+import { useEffect } from "react";
 
 const threadContentVariants = cva("flex flex-col gap-4", {
   variants: {
@@ -36,6 +37,9 @@ export interface ThreadContentProps
 const ThreadContent = React.forwardRef<HTMLDivElement, ThreadContentProps>(
   ({ className, variant, ...props }, ref) => {
     const { thread, generationStage } = useTambo();
+    useEffect(() => {
+      console.log("thread", thread);
+    }, [thread]);
     const messages = thread?.messages ?? [];
     const isGenerating = generationStage === "STREAMING_RESPONSE";
 

@@ -14,8 +14,10 @@ export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [show, setShow] = useState(false);
   const { selectedRepository } = useRepositoryStore();
   const { generationStage } = useTamboThread();
+
   useEffect(() => {
     if (selectedRepository && (generationStage === GenerationStage.COMPLETE || generationStage === GenerationStage.IDLE)) {
       loadIssues();
@@ -27,8 +29,10 @@ export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
 
     try {
       setLoading(true);
+      setShow(false);
       const fetchedIssues = await getIssues(filters);
       setIssues(fetchedIssues);
+      setTimeout(() => setShow(true), 50);
     } catch (err) {
       setError('Failed to load issues');
       console.error(err);
@@ -101,7 +105,7 @@ export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="space-y-4 max-w-xl mx-auto">
+    <div className={`space-y-4 max-w-lg mx-auto transform transition-all duration-300 ease-out ${show ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
       <div className="flex justify-end">
         <button
           onClick={() => setShowCreateForm(!showCreateForm)}
