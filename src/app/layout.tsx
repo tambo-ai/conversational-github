@@ -74,7 +74,7 @@ const tamboComponents: TamboComponent[] = [
   },
   {
     name: "github-create-issue-form",
-    description: "A form to create a new issue in a GitHub repository. Use this when the user wants to create a new issue.",
+    description: "A form to create a new issue in a GitHub repository. Use this when the user wants to create a new issue. If there seems to be an existing issue that is similar, show that issue to the user and ask if it contains the information they want to add. If the user then confirms that it does not, show this form.",
     component: CreateIssueForm,
     propsSchema: z.object({
       initialTitle: z.string().describe("The initial title of the issue to create").optional(),
