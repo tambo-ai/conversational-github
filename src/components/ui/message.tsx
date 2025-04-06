@@ -118,7 +118,6 @@ const Message = React.forwardRef<HTMLDivElement, MessageProps>(
               )}
             </div>
           </div>
-
         </div>
       </div>
     );

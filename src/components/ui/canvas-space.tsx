@@ -12,12 +12,15 @@ interface CanvasSpaceProps {
 export function CanvasSpace({ className }: CanvasSpaceProps) {
   const { thread } = useTamboThread();
   const [isAnimating, setIsAnimating] = useState(false);
-  const [currentComponent, setCurrentComponent] = useState<React.ReactNode | null>(null);
+  const [currentComponent, setCurrentComponent] =
+    useState<React.ReactNode | null>(null);
   const [isExiting, setIsExiting] = useState(false);
   const lastMessageIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const lastRenderedMessage = thread?.messages?.findLast(msg => msg.renderedComponent);
+    const lastRenderedMessage = thread?.messages?.findLast(
+      (msg) => msg.renderedComponent,
+    );
     const lastRenderedComponent = lastRenderedMessage?.renderedComponent;
     const messageId = lastRenderedMessage?.id ?? null;
 
@@ -42,16 +45,21 @@ export function CanvasSpace({ className }: CanvasSpaceProps) {
   }, [thread?.messages]);
 
   return (
-    <div className={cn("rounded-lg p-4 h-[calc(100vh-4rem)] overflow-hidden", className)}>
+    <div
+      className={cn(
+        "rounded-lg p-4 h-[calc(100vh-4rem)] overflow-hidden",
+        className,
+      )}
+    >
       <div className="w-full min-h-full flex items-center justify-center text-gray-500">
         <div
           className={cn(
             "w-full transition-all duration-300 ease-in-out",
-            isAnimating ? (
-              isExiting
+            isAnimating
+              ? isExiting
                 ? "opacity-0 translate-x-full"
                 : "opacity-0 -translate-x-full"
-            ) : "opacity-100 translate-x-0"
+              : "opacity-100 translate-x-0",
           )}
         >
           {currentComponent || (
@@ -85,4 +93,4 @@ export function CanvasSpace({ className }: CanvasSpaceProps) {
       `}</style>
     </div>
   );
-} 
+}

@@ -41,20 +41,24 @@ const ThreadContent = React.forwardRef<HTMLDivElement, ThreadContentProps>(
     const isGenerating = generationStage === "STREAMING_RESPONSE";
 
     // Find latest messages for each role
-    const latestUserMessage = [...messages].reverse().find(m => m.role === "user");
-    const latestAssistantMessage = [...messages].reverse().find(m =>
-      m.role === "assistant" || m.role === "hydra"
-    );
+    const latestUserMessage = [...messages]
+      .reverse()
+      .find((m) => m.role === "user");
+    const latestAssistantMessage = [...messages]
+      .reverse()
+      .find((m) => m.role === "assistant" || m.role === "hydra");
 
     // Determine which messages to show
     const messagesToShow = [];
     if (latestUserMessage) {
       messagesToShow.push(latestUserMessage);
       // Show assistant message if it came AFTER the latest user message
-      if (latestAssistantMessage &&
+      if (
+        latestAssistantMessage &&
         latestAssistantMessage.createdAt &&
         latestUserMessage.createdAt &&
-        latestAssistantMessage.createdAt > latestUserMessage.createdAt) {
+        latestAssistantMessage.createdAt > latestUserMessage.createdAt
+      ) {
         messagesToShow.push(latestAssistantMessage);
       }
     }
@@ -66,7 +70,8 @@ const ThreadContent = React.forwardRef<HTMLDivElement, ThreadContentProps>(
         {...props}
       >
         {messagesToShow.map((message, index) => {
-          const showLoading = isGenerating && index === messagesToShow.length - 1;
+          const showLoading =
+            isGenerating && index === messagesToShow.length - 1;
           const messageContent = Array.isArray(message.content)
             ? (message.content[0]?.text ?? "Empty message")
             : typeof message.content === "string"
@@ -79,12 +84,12 @@ const ThreadContent = React.forwardRef<HTMLDivElement, ThreadContentProps>(
               className={cn(
                 "animate-in fade-in-0 slide-in-from-bottom-2",
                 "duration-500 ease-in-out",
-                "opacity-0 animate-fade-in"
+                "opacity-0 animate-fade-in",
               )}
               style={{
                 animationDelay: `${index * 100}ms`,
                 animationFillMode: "forwards",
-                animation: "fadeIn 500ms ease-in-out forwards"
+                animation: "fadeIn 500ms ease-in-out forwards",
               }}
             >
               <style jsx>{`

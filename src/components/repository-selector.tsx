@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Repository, getRepositories } from '@/services/github';
-import { useRepositoryStore } from '@/store/repository-store';
-import { useEffect, useState } from 'react';
+import { Repository, getRepositories } from "@/services/github";
+import { useRepositoryStore } from "@/store/repository-store";
+import { useEffect, useState } from "react";
 
 export function RepositorySelector() {
   const [repositories, setRepositories] = useState<Repository[]>([]);
@@ -17,7 +17,7 @@ export function RepositorySelector() {
         const repos = await getRepositories();
         setRepositories(repos);
       } catch (err) {
-        setError('Failed to load repositories');
+        setError("Failed to load repositories");
         console.error(err);
       } finally {
         setLoading(false);
@@ -27,15 +27,16 @@ export function RepositorySelector() {
     fetchRepositories();
   }, []);
 
-  if (loading) return <div className="text-muted-foreground">Loading repositories...</div>;
+  if (loading)
+    return <div className="text-muted-foreground">Loading repositories...</div>;
   if (error) return <div className="text-destructive">{error}</div>;
 
   return (
     <div className="w-full">
       <select
-        value={selectedRepository?.full_name || ''}
+        value={selectedRepository?.full_name || ""}
         onChange={(e) => {
-          const repo = repositories.find(r => r.full_name === e.target.value);
+          const repo = repositories.find((r) => r.full_name === e.target.value);
           setSelectedRepository(repo || null);
         }}
         className="w-full p-2 rounded-lg border bg-background text-foreground border-border"
@@ -49,4 +50,4 @@ export function RepositorySelector() {
       </select>
     </div>
   );
-} 
+}

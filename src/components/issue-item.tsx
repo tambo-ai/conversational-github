@@ -1,8 +1,14 @@
-'use client';
-import { useRepositoryStore } from '@/store/repository-store';
-import { ChevronDown, ChevronUp, MessageSquare, X } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
-import { closeIssue, Comment, createComment, getComments, Issue } from '../services/github';
+"use client";
+import { useRepositoryStore } from "@/store/repository-store";
+import { ChevronDown, ChevronUp, MessageSquare, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import {
+  closeIssue,
+  Comment,
+  createComment,
+  getComments,
+  Issue,
+} from "../services/github";
 
 interface IssueItemProps {
   issue?: Issue;
@@ -13,21 +19,28 @@ interface IssueItemProps {
 
 const MAX_DESCRIPTION_LENGTH = 150;
 
-export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
-  number: 0,
-  title: '',
-  body: '',
-  state: '',
-  created_at: '',
-  updated_at: '',
-  html_url: '',
-  comments: 0,
-}, onCloseIssue, commentsOpen = false, isDescriptionExpandedByDefault = true }) => {
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(isDescriptionExpandedByDefault);
+export const IssueItem: React.FC<IssueItemProps> = ({
+  issue = {
+    number: 0,
+    title: "",
+    body: "",
+    state: "",
+    created_at: "",
+    updated_at: "",
+    html_url: "",
+    comments: 0,
+  },
+  onCloseIssue,
+  commentsOpen = false,
+  isDescriptionExpandedByDefault = true,
+}) => {
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(
+    isDescriptionExpandedByDefault,
+  );
   const [isCommentsExpanded, setIsCommentsExpanded] = useState(commentsOpen);
   const [comments, setComments] = useState<Comment[]>([]);
   const [isLoadingComments, setIsLoadingComments] = useState(false);
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState("");
   const [isSubmittingComment, setIsSubmittingComment] = useState(false);
   const { selectedRepository } = useRepositoryStore();
 
@@ -40,10 +53,13 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
       if (commentsOpen && selectedRepository && !isLoadingComments) {
         setIsLoadingComments(true);
         try {
-          const fetchedComments = await getComments(selectedRepository, issue.number);
+          const fetchedComments = await getComments(
+            selectedRepository,
+            issue.number,
+          );
           setComments(fetchedComments);
         } catch (error) {
-          console.error('Failed to load comments:', error);
+          console.error("Failed to load comments:", error);
         } finally {
           setIsLoadingComments(false);
         }
@@ -52,9 +68,10 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
     loadComments();
   }, [commentsOpen, selectedRepository, issue.number]);
 
-  const truncatedBody = issue.body && issue.body.length > MAX_DESCRIPTION_LENGTH
-    ? issue.body.substring(0, MAX_DESCRIPTION_LENGTH) + '...'
-    : issue.body;
+  const truncatedBody =
+    issue.body && issue.body.length > MAX_DESCRIPTION_LENGTH
+      ? issue.body.substring(0, MAX_DESCRIPTION_LENGTH) + "..."
+      : issue.body;
 
   const handleToggleDescription = () => {
     setIsDescriptionExpanded(!isDescriptionExpanded);
@@ -64,10 +81,13 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
     if (!isCommentsExpanded && selectedRepository) {
       setIsLoadingComments(true);
       try {
-        const fetchedComments = await getComments(selectedRepository, issue.number);
+        const fetchedComments = await getComments(
+          selectedRepository,
+          issue.number,
+        );
         setComments(fetchedComments);
       } catch (error) {
-        console.error('Failed to load comments:', error);
+        console.error("Failed to load comments:", error);
       } finally {
         setIsLoadingComments(false);
       }
@@ -92,12 +112,15 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
     setIsSubmittingComment(true);
     try {
       await createComment(selectedRepository, issue.number, newComment);
-      const updatedComments = await getComments(selectedRepository, issue.number);
+      const updatedComments = await getComments(
+        selectedRepository,
+        issue.number,
+      );
       setComments(updatedComments);
       issue.comments = updatedComments.length;
-      setNewComment('');
+      setNewComment("");
     } catch (error) {
-      console.error('Failed to create comment:', error);
+      console.error("Failed to create comment:", error);
     } finally {
       setIsSubmittingComment(false);
     }
@@ -110,8 +133,13 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
           <h3 className="text-lg font-semibold text-left">{issue.title}</h3>
           <span className="text-sm text-muted-foreground">#{issue.number}</span>
         </div>
-        <span className={`px-2 py-1 rounded-md text-sm ${issue.state === 'open' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-          }`}>
+        <span
+          className={`px-2 py-1 rounded-md text-sm ${
+            issue.state === "open"
+              ? "bg-green-100 text-green-800"
+              : "bg-gray-100 text-gray-800"
+          }`}
+        >
           {issue.state}
         </span>
       </div>
@@ -144,12 +172,19 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
           className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground cursor-pointer"
         >
           <MessageSquare className="w-4 h-4" />
-          <span>Comments {issue.comments && issue.comments > 0 && `(${issue.comments})`}</span>
+          <span>
+            Comments{" "}
+            {issue.comments && issue.comments > 0 && `(${issue.comments})`}
+          </span>
         </button>
 
-        {issue.state === 'open' && (
+        {issue.state === "open" && (
           <button
-            onClick={() => onCloseIssue ? onCloseIssue(issue.number) : handleCloseIssue(issue.number)}
+            onClick={() =>
+              onCloseIssue
+                ? onCloseIssue(issue.number)
+                : handleCloseIssue(issue.number)
+            }
             className="ml-auto flex items-center gap-1 text-sm text-red-500 hover:text-red-600 cursor-pointer"
           >
             <X className="w-4 h-4" />
@@ -199,11 +234,11 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
               disabled={isSubmittingComment}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 cursor-pointer"
             >
-              {isSubmittingComment ? 'Posting...' : 'Post Comment'}
+              {isSubmittingComment ? "Posting..." : "Post Comment"}
             </button>
           </form>
         </div>
       )}
     </div>
   );
-}; 
+};

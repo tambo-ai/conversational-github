@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import { GitHubAuth } from '@/components/github-auth';
-import { RepositorySelector } from '@/components/repository-selector';
-import { CanvasSpace } from '@/components/ui/canvas-space';
-import { MessageThreadFull } from '@/components/ui/message-thread-full';
-import { useAuthStore } from '@/store/auth-store';
-import { useRepositoryStore } from '@/store/repository-store';
+import { GitHubAuth } from "@/components/github-auth";
+import { RepositorySelector } from "@/components/repository-selector";
+import { CanvasSpace } from "@/components/ui/canvas-space";
+import { MessageThreadFull } from "@/components/ui/message-thread-full";
+import { useAuthStore } from "@/store/auth-store";
+import { useRepositoryStore } from "@/store/repository-store";
 
 export default function Home() {
   const { selectedRepository } = useRepositoryStore();

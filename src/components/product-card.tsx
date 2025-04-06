@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState } from "react";
 import { Product } from "../services/product-service";
@@ -10,20 +10,29 @@ export const ProductCard = ({
   description,
   discountPercentage,
   accentColor,
-  inStock
-}: Pick<Product, 'name' | 'price' | 'description' | 'discountPercentage' | 'accentColor' | 'inStock'>) => {
+  inStock,
+}: Pick<
+  Product,
+  | "name"
+  | "price"
+  | "description"
+  | "discountPercentage"
+  | "accentColor"
+  | "inStock"
+>) => {
   const [isAdded, setIsAdded] = useState(false);
 
   const colorClasses = {
-    indigo: 'bg-indigo-500 hover:bg-indigo-600 text-white',
-    emerald: 'bg-emerald-500 hover:bg-emerald-600 text-white',
-    rose: 'bg-rose-500 hover:bg-rose-600 text-white',
-    amber: 'bg-amber-500 hover:bg-amber-600 text-white'
+    indigo: "bg-indigo-500 hover:bg-indigo-600 text-white",
+    emerald: "bg-emerald-500 hover:bg-emerald-600 text-white",
+    rose: "bg-rose-500 hover:bg-rose-600 text-white",
+    amber: "bg-amber-500 hover:bg-amber-600 text-white",
   };
 
-  const discountedPrice = price && discountPercentage
-    ? price - (price * (discountPercentage / 100))
-    : undefined;
+  const discountedPrice =
+    price && discountPercentage
+      ? price - price * (discountPercentage / 100)
+      : undefined;
 
   const LoadingSkeleton = ({ className = "" }: { className?: string }) => (
     <div className={`animate-pulse bg-gray-200 rounded ${className}`} />
@@ -42,11 +51,13 @@ export const ProductCard = ({
 
       <div className="flex justify-between items-center">
         <div className="flex flex-col">
-          {discountPercentage !== undefined && discountPercentage > 0 && price !== undefined && (
-            <span className="text-sm line-through text-gray-500">
-              ${price.toFixed(2)}
-            </span>
-          )}
+          {discountPercentage !== undefined &&
+            discountPercentage > 0 &&
+            price !== undefined && (
+              <span className="text-sm line-through text-gray-500">
+                ${price.toFixed(2)}
+              </span>
+            )}
           {discountedPrice !== undefined ? (
             <span className="text-lg font-bold text-gray-900">
               ${discountedPrice.toFixed(2)}
@@ -56,8 +67,10 @@ export const ProductCard = ({
           )}
         </div>
         {inStock !== undefined ? (
-          <span className={`text-sm font-medium ${inStock ? 'text-green-600' : 'text-red-600'}`}>
-            {inStock ? '✓ In Stock' : '× Out of Stock'}
+          <span
+            className={`text-sm font-medium ${inStock ? "text-green-600" : "text-red-600"}`}
+          >
+            {inStock ? "✓ In Stock" : "× Out of Stock"}
           </span>
         ) : (
           <LoadingSkeleton className="h-5 w-24" />
@@ -69,12 +82,11 @@ export const ProductCard = ({
       <button
         onClick={() => setIsAdded(!isAdded)}
         disabled={!inStock || price === undefined || inStock === undefined}
-        className={`w-full px-4 py-2 rounded-lg transition-all duration-200 ${isAdded
-          ? 'bg-gray-100 text-gray-800'
-          : colorClasses[accentColor]
-          } ${(!inStock || price === undefined || inStock === undefined) ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`w-full px-4 py-2 rounded-lg transition-all duration-200 ${
+          isAdded ? "bg-gray-100 text-gray-800" : colorClasses[accentColor]
+        } ${!inStock || price === undefined || inStock === undefined ? "opacity-50 cursor-not-allowed" : ""}`}
       >
-        {isAdded ? 'Added to Cart ✓' : 'Add to Cart'}
+        {isAdded ? "Added to Cart ✓" : "Add to Cart"}
       </button>
     </div>
   );

@@ -78,7 +78,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>(
           streamResponse: true,
         });
         setValue("");
-
       } catch (error) {
         console.error("Failed to submit message:", error);
         setDisplayValue(value);

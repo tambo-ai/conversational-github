@@ -1,7 +1,7 @@
-'use client';
-import { createIssue } from '@/services/github';
-import { useRepositoryStore } from '@/store/repository-store';
-import React, { useEffect, useRef, useState } from 'react';
+"use client";
+import { createIssue } from "@/services/github";
+import { useRepositoryStore } from "@/store/repository-store";
+import React, { useEffect, useRef, useState } from "react";
 
 interface CreateIssueFormProps {
   onSubmit?: (title: string, body: string) => Promise<void>;
@@ -9,7 +9,11 @@ interface CreateIssueFormProps {
   initialBody?: string;
 }
 
-export const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ onSubmit, initialTitle = '', initialBody = '' }) => {
+export const CreateIssueForm: React.FC<CreateIssueFormProps> = ({
+  onSubmit,
+  initialTitle = "",
+  initialBody = "",
+}) => {
   const [title, setTitle] = useState(initialTitle);
   const [body, setBody] = useState(initialBody);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,7 +24,7 @@ export const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ onSubmit, init
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto';
+      textarea.style.height = "auto";
       textarea.style.height = `${textarea.scrollHeight}px`;
     }
   };
@@ -44,11 +48,7 @@ export const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ onSubmit, init
       if (onSubmit) {
         await onSubmit(title, body);
       } else {
-        await createIssue(
-          selectedRepository,
-          title,
-          body
-        );
+        await createIssue(selectedRepository, title, body);
       }
 
       setIsSubmitted(true);
@@ -66,8 +66,8 @@ export const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ onSubmit, init
         <button
           onClick={() => {
             setIsSubmitted(false);
-            setTitle('');
-            setBody('');
+            setTitle("");
+            setBody("");
           }}
           className="mt-4 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 cursor-pointer"
         >
@@ -105,21 +105,38 @@ export const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ onSubmit, init
       <button
         type="submit"
         disabled={isSubmitting}
-        className={`w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/80 cursor-pointer transition-colors ${isSubmitting ? 'opacity-70' : ''
-          }`}
+        className={`w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/80 cursor-pointer transition-colors ${
+          isSubmitting ? "opacity-70" : ""
+        }`}
       >
         {isSubmitting ? (
           <span className="flex items-center justify-center">
-            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
             Creating Issue...
           </span>
         ) : (
-          'Create Issue'
+          "Create Issue"
         )}
       </button>
     </form>
   );
-}; 
+};

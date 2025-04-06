@@ -50,7 +50,6 @@ const MessageThreadFull = React.forwardRef<
       )}
       {...props}
     >
-
       <div
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto px-4 [&::-webkit-scrollbar]:w-[6px] [&::-webkit-scrollbar-thumb]:bg-gray-300"

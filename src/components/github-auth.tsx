@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useAuthStore } from '@/store/auth-store';
+import { useAuthStore } from "@/store/auth-store";
 
 export function GitHubAuth() {
   const { isAuthenticated, setAccessToken } = useAuthStore();
@@ -8,9 +8,9 @@ export function GitHubAuth() {
   const handleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID;
     const redirectUri = `${window.location.origin}/auth/callback`;
-    const scope = 'repo';
+    const scope = "repo";
 
-    localStorage.setItem('auth_redirect', window.location.pathname);
+    localStorage.setItem("auth_redirect", window.location.pathname);
 
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
   };
@@ -22,7 +22,9 @@ export function GitHubAuth() {
   if (isAuthenticated) {
     return (
       <div className="flex items-center gap-4">
-        <span className="text-sm text-muted-foreground">Connected to GitHub</span>
+        <span className="text-sm text-muted-foreground">
+          Connected to GitHub
+        </span>
         <button
           className="px-4 py-1 border rounded-md hover:opacity-80 text-muted-foreground cursor-pointer"
           onClick={handleLogout}
@@ -41,7 +43,9 @@ export function GitHubAuth() {
       >
         Connect with GitHub
       </button>
-      <p className="text-md text-muted-foreground">Talk to your GitHub issues</p>
+      <p className="text-md text-muted-foreground">
+        Talk to your GitHub issues
+      </p>
     </div>
   );
-} 
+}

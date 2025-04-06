@@ -1,6 +1,6 @@
-import { useAuthStore } from '@/store/auth-store';
-import { useRepositoryStore } from '@/store/repository-store';
-import { Octokit } from '@octokit/rest';
+import { useAuthStore } from "@/store/auth-store";
+import { useRepositoryStore } from "@/store/repository-store";
+import { Octokit } from "@octokit/rest";
 
 // Create a function to get an Octokit instance with the current auth token
 const getOctokit = () => {
@@ -41,7 +41,7 @@ export interface Repository {
 }
 
 export interface IssueFilters {
-  state?: 'open' | 'closed' | 'all';
+  state?: "open" | "closed" | "all";
   title?: string;
   body?: string;
   created_after?: string;
@@ -59,34 +59,58 @@ export async function getIssues(filters?: IssueFilters): Promise<Issue[]> {
   const response = await getOctokit().issues.listForRepo({
     owner: selectedRepository.owner,
     repo: selectedRepository.repo,
-    state: filters?.state || 'all',
+    state: filters?.state || "all",
     per_page: 100,
   });
 
-  let filteredIssues = response.data.filter(issue => !issue.pull_request) as Issue[];
+  let filteredIssues = response.data.filter(
+    (issue) => !issue.pull_request,
+  ) as Issue[];
 
   // Apply additional filters
   if (filters) {
-    filteredIssues = filteredIssues.filter(issue => {
-      if (filters.title && !issue.title.toLowerCase().includes(filters.title.toLowerCase())) {
+    filteredIssues = filteredIssues.filter((issue) => {
+      if (
+        filters.title &&
+        !issue.title.toLowerCase().includes(filters.title.toLowerCase())
+      ) {
         return false;
       }
-      if (filters.body && issue.body && !issue.body.toLowerCase().includes(filters.body.toLowerCase())) {
+      if (
+        filters.body &&
+        issue.body &&
+        !issue.body.toLowerCase().includes(filters.body.toLowerCase())
+      ) {
         return false;
       }
-      if (filters.created_after && new Date(issue.created_at) < new Date(filters.created_after)) {
+      if (
+        filters.created_after &&
+        new Date(issue.created_at) < new Date(filters.created_after)
+      ) {
         return false;
       }
-      if (filters.created_before && new Date(issue.created_at) > new Date(filters.created_before)) {
+      if (
+        filters.created_before &&
+        new Date(issue.created_at) > new Date(filters.created_before)
+      ) {
         return false;
       }
-      if (filters.updated_after && new Date(issue.updated_at) < new Date(filters.updated_after)) {
+      if (
+        filters.updated_after &&
+        new Date(issue.updated_at) < new Date(filters.updated_after)
+      ) {
         return false;
       }
-      if (filters.updated_before && new Date(issue.updated_at) > new Date(filters.updated_before)) {
+      if (
+        filters.updated_before &&
+        new Date(issue.updated_at) > new Date(filters.updated_before)
+      ) {
         return false;
       }
-      if (filters.comments !== undefined && issue.comments !== filters.comments) {
+      if (
+        filters.comments !== undefined &&
+        issue.comments !== filters.comments
+      ) {
         return false;
       }
       return true;
@@ -96,7 +120,10 @@ export async function getIssues(filters?: IssueFilters): Promise<Issue[]> {
   return filteredIssues;
 }
 
-export async function getIssue(repo: Repository, issueNumber: number): Promise<Issue> {
+export async function getIssue(
+  repo: Repository,
+  issueNumber: number,
+): Promise<Issue> {
   const response = await getOctokit().issues.get({
     owner: repo.owner,
     repo: repo.repo,
@@ -105,7 +132,11 @@ export async function getIssue(repo: Repository, issueNumber: number): Promise<I
   return response.data as Issue;
 }
 
-export async function createIssue(repo: Repository, title: string, body: string): Promise<Issue> {
+export async function createIssue(
+  repo: Repository,
+  title: string,
+  body: string,
+): Promise<Issue> {
   const response = await getOctokit().issues.create({
     owner: repo.owner,
     repo: repo.repo,
@@ -115,7 +146,12 @@ export async function createIssue(repo: Repository, title: string, body: string)
   return response.data as Issue;
 }
 
-export async function updateIssue(repo: Repository, issueNumber: number, title: string, body: string): Promise<Issue> {
+export async function updateIssue(
+  repo: Repository,
+  issueNumber: number,
+  title: string,
+  body: string,
+): Promise<Issue> {
   const response = await getOctokit().issues.update({
     owner: repo.owner,
     repo: repo.repo,
@@ -126,12 +162,15 @@ export async function updateIssue(repo: Repository, issueNumber: number, title: 
   return response.data as Issue;
 }
 
-export async function closeIssue(repo: Repository, issueNumber: number): Promise<Issue> {
+export async function closeIssue(
+  repo: Repository,
+  issueNumber: number,
+): Promise<Issue> {
   const response = await getOctokit().issues.update({
     owner: repo.owner,
     repo: repo.repo,
     issue_number: issueNumber,
-    state: 'closed',
+    state: "closed",
   });
   return response.data as Issue;
 }
@@ -139,10 +178,10 @@ export async function closeIssue(repo: Repository, issueNumber: number): Promise
 export async function getRepositories(): Promise<Repository[]> {
   const octokit = getOctokit();
   const response = await octokit.repos.listForAuthenticatedUser({
-    sort: 'updated',
+    sort: "updated",
     per_page: 100,
   });
-  return response.data.map(repo => ({
+  return response.data.map((repo) => ({
     owner: repo.owner.login,
     repo: repo.name,
     name: repo.name,
@@ -152,7 +191,10 @@ export async function getRepositories(): Promise<Repository[]> {
   }));
 }
 
-export async function getComments(repo: Repository, issueNumber: number): Promise<Comment[]> {
+export async function getComments(
+  repo: Repository,
+  issueNumber: number,
+): Promise<Comment[]> {
   const response = await getOctokit().issues.listComments({
     owner: repo.owner,
     repo: repo.repo,
@@ -162,7 +204,11 @@ export async function getComments(repo: Repository, issueNumber: number): Promis
   return response.data as Comment[];
 }
 
-export async function createComment(repo: Repository, issueNumber: number, body: string): Promise<Comment> {
+export async function createComment(
+  repo: Repository,
+  issueNumber: number,
+  body: string,
+): Promise<Comment> {
   const response = await getOctokit().issues.createComment({
     owner: repo.owner,
     repo: repo.repo,
@@ -170,4 +216,4 @@ export async function createComment(repo: Repository, issueNumber: number, body:
     body,
   });
   return response.data as Comment;
-} 
+}
