@@ -1,6 +1,6 @@
 import { useRepositoryStore } from '@/store/repository-store';
 import { GenerationStage, useTamboThread } from '@tambo-ai/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { closeIssue, createIssue, getIssues, Issue, IssueFilters } from '../services/github';
 import { CreateIssueForm } from './create-issue-form';
 import { IssueItem } from './issue-item';
@@ -15,8 +15,17 @@ export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [show, setShow] = useState(false);
+  const hasAnimated = useRef(false);
   const { selectedRepository } = useRepositoryStore();
   const { generationStage } = useTamboThread();
+
+  // Handle initial animation only once when data is loaded
+  useEffect(() => {
+    if (!loading && !hasAnimated.current) {
+      hasAnimated.current = true;
+      setTimeout(() => setShow(true), 50);
+    }
+  }, [loading]);
 
   useEffect(() => {
     if (selectedRepository && (generationStage === GenerationStage.COMPLETE || generationStage === GenerationStage.IDLE)) {
@@ -32,7 +41,7 @@ export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
       setShow(false);
       const fetchedIssues = await getIssues(filters);
       setIssues(fetchedIssues);
-      setTimeout(() => setShow(true), 50);
+      hasAnimated.current = false; // Reset animation flag when loading new data
     } catch (err) {
       setError('Failed to load issues');
       console.error(err);

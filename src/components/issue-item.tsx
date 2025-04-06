@@ -123,7 +123,7 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
         {issue.body && issue.body.length > MAX_DESCRIPTION_LENGTH && (
           <button
             onClick={handleToggleDescription}
-            className="text-sm text-primary hover:text-primary/80 flex items-center gap-1 mt-1"
+            className="text-sm text-primary hover:text-primary/80 flex items-center gap-1 mt-1 cursor-pointer"
           >
             {isDescriptionExpanded ? (
               <>
@@ -141,7 +141,7 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
       <div className="mt-4 flex items-center gap-4">
         <button
           onClick={handleToggleComments}
-          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground cursor-pointer"
         >
           <MessageSquare className="w-4 h-4" />
           <span>Comments {issue.comments && issue.comments > 0 && `(${issue.comments})`}</span>
@@ -197,7 +197,7 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
             <button
               type="submit"
               disabled={isSubmittingComment}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 cursor-pointer"
             >
               {isSubmittingComment ? 'Posting...' : 'Post Comment'}
             </button>
