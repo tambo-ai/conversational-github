@@ -1,6 +1,16 @@
 # Conversational GitHub Issue Interaction
 
-to run locally, create a GitHub OAuth App:
+A web app that with a natural language interface for managing GitHub issues, built with [tambo ai](https://tambo.co/) for AI-powered UI.
+
+## Setup Instructions
+
+To run locally:
+
+1. Get a Tambo AI API key:
+
+- run `npx tambo init`
+
+2. create a GitHub OAuth App:
 
 - Go to GitHub Settings > Developer Settings > OAuth Apps > New OAuth App
 - Set the Application name
@@ -15,3 +25,9 @@ NEXT_PUBLIC_TAMBO_API_KEY=
 NEXT_PUBLIC_GITHUB_CLIENT_ID=
 GITHUB_CLIENT_SECRET=
 ```
+
+Then:
+
+`npm i`
+
+`npm run dev`
