@@ -125,7 +125,7 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>(
           <button
             type="submit"
             disabled={isPending}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center min-w-[70px]"
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 flex items-center justify-center min-w-[70px] cursor-pointer"
           >
             {isPending ? <Spinner /> : "Send"}
           </button>
