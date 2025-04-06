@@ -66,7 +66,7 @@ export const IssueItem: React.FC<IssueItemProps> = ({
       }
     };
     loadComments();
-  }, [commentsOpen, selectedRepository, issue.number]);
+  }, [commentsOpen, selectedRepository, issue.number, isLoadingComments]);
 
   const truncatedBody =
     issue.body && issue.body.length > MAX_DESCRIPTION_LENGTH
@@ -100,8 +100,9 @@ export const IssueItem: React.FC<IssueItemProps> = ({
 
     try {
       await closeIssue(selectedRepository, issueNumber);
+      issue.state = "closed";
     } catch (err) {
-      console.error(err);
+      console.error("Failed to close issue:", err);
     }
   };
 
@@ -117,7 +118,8 @@ export const IssueItem: React.FC<IssueItemProps> = ({
         issue.number,
       );
       setComments(updatedComments);
-      issue.comments = updatedComments.length;
+      const updatedIssue = { ...issue, comments: updatedComments.length };
+      issue = updatedIssue;
       setNewComment("");
     } catch (error) {
       console.error("Failed to create comment:", error);
@@ -134,11 +136,10 @@ export const IssueItem: React.FC<IssueItemProps> = ({
           <span className="text-sm text-muted-foreground">#{issue.number}</span>
         </div>
         <span
-          className={`px-2 py-1 rounded-md text-sm ${
-            issue.state === "open"
-              ? "bg-green-100 text-green-800"
-              : "bg-gray-100 text-gray-800"
-          }`}
+          className={`px-2 py-1 rounded-md text-sm ${issue.state === "open"
+            ? "bg-green-100 text-green-800"
+            : "bg-gray-100 text-gray-800"
+            }`}
         >
           {issue.state}
         </span>

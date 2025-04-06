@@ -67,7 +67,7 @@ export interface MessageProps {
 
 const Message = React.forwardRef<HTMLDivElement, MessageProps>(
   (
-    { className, role, content, variant, message, isLoading, ...props },
+    { className, role, content, variant, isLoading, ...props },
     ref,
   ) => {
     const safeContent = React.useMemo(() => {

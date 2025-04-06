@@ -1,6 +1,6 @@
 import { useRepositoryStore } from "@/store/repository-store";
 import { GenerationStage, useTamboThread } from "@tambo-ai/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   closeIssue,
   createIssue,
@@ -25,6 +25,25 @@ export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
   const { selectedRepository } = useRepositoryStore();
   const { generationStage } = useTamboThread();
 
+  const loadIssues = useCallback(async () => {
+    if (!selectedRepository) return;
+
+    try {
+      setLoading(true);
+      setError(null); // Reset error state before loading
+      setShow(false);
+      const fetchedIssues = await getIssues(filters);
+      setIssues(fetchedIssues);
+      hasAnimated.current = false; // Reset animation flag when loading new data
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to load issues";
+      setError(errorMessage);
+      console.error("Error loading issues:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [selectedRepository, filters]);
+
   // Handle initial animation only once when data is loaded
   useEffect(() => {
     if (!loading && !hasAnimated.current) {
@@ -41,35 +60,19 @@ export const IssuesList: React.FC<IssuesListProps> = ({ filters }) => {
     ) {
       loadIssues();
     }
-  }, [selectedRepository, filters]);
-
-  const loadIssues = async () => {
-    if (!selectedRepository) return;
-
-    try {
-      setLoading(true);
-      setShow(false);
-      const fetchedIssues = await getIssues(filters);
-      setIssues(fetchedIssues);
-      hasAnimated.current = false; // Reset animation flag when loading new data
-    } catch (err) {
-      setError("Failed to load issues");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [selectedRepository, filters, generationStage, loadIssues]);
 
   const handleCreateIssue = async (title: string, body: string) => {
     if (!selectedRepository) return;
 
     try {
       const newIssue = await createIssue(selectedRepository, title, body);
-      setIssues([newIssue, ...issues]);
+      setIssues(prevIssues => [...prevIssues, newIssue]);
       setShowCreateForm(false);
     } catch (err) {
-      setError("Failed to create issue");
-      console.error(err);
+      const errorMessage = err instanceof Error ? err.message : "Failed to create issue";
+      setError(errorMessage);
+      console.error("Error creating issue:", err);
     }
   };
 

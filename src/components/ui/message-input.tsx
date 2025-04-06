@@ -40,18 +40,10 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>(
       useTamboThreadInput(contextKey);
     const [displayValue, setDisplayValue] = React.useState("");
     const [submitError, setSubmitError] = React.useState<string | null>(null);
-    const [isMac, setIsMac] = React.useState(false);
     const inputRef = React.useRef<HTMLInputElement>(null);
 
     // Handle the forwarded ref
     React.useImperativeHandle(ref, () => inputRef.current!, []);
-
-    React.useEffect(() => {
-      const isMacOS =
-        typeof navigator !== "undefined" &&
-        navigator.platform.toUpperCase().includes("MAC");
-      setIsMac(isMacOS);
-    }, []);
 
     React.useEffect(() => {
       setDisplayValue(value);
@@ -98,8 +90,6 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>(
       }
     };
 
-    const modKey = isMac ? "⌘" : "Ctrl";
-
     const Spinner = () => (
       <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
     );
@@ -129,6 +119,11 @@ const MessageInput = React.forwardRef<HTMLInputElement, MessageInputProps>(
             {isPending ? <Spinner /> : "Send"}
           </button>
         </div>
+        {(error || submitError) && (
+          <p className="text-destructive text-sm mt-2">
+            {error?.message || submitError}
+          </p>
+        )}
       </form>
     );
   },

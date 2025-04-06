@@ -124,11 +124,20 @@ export async function getIssue(
   repo: Repository,
   issueNumber: number,
 ): Promise<Issue> {
+  if (!repo.owner || !repo.repo) {
+    throw new Error("Repository owner and repo are required");
+  }
+
   const response = await getOctokit().issues.get({
     owner: repo.owner,
     repo: repo.repo,
     issue_number: issueNumber,
   });
+
+  if (response.data.pull_request) {
+    throw new Error("This is a pull request, not an issue");
+  }
+
   return response.data as Issue;
 }
 
@@ -137,12 +146,17 @@ export async function createIssue(
   title: string,
   body: string,
 ): Promise<Issue> {
+  if (!repo.owner || !repo.repo) {
+    throw new Error("Repository owner and repo are required");
+  }
+
   const response = await getOctokit().issues.create({
     owner: repo.owner,
     repo: repo.repo,
     title,
     body,
   });
+
   return response.data as Issue;
 }
 
