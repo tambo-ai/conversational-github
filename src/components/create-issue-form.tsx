@@ -1,7 +1,7 @@
 'use client';
 import { createIssue } from '@/services/github';
 import { useRepositoryStore } from '@/store/repository-store';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface CreateIssueFormProps {
   onSubmit?: (title: string, body: string) => Promise<void>;
@@ -15,6 +15,19 @@ export const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ onSubmit, init
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const { selectedRepository } = useRepositoryStore();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [body]);
 
   useEffect(() => {
     setTitle(initialTitle);
@@ -80,11 +93,11 @@ export const CreateIssueForm: React.FC<CreateIssueFormProps> = ({ onSubmit, init
       </div>
       <div>
         <textarea
+          ref={textareaRef}
           value={body}
           onChange={(e) => setBody(e.target.value)}
           placeholder="Issue description"
-          className="w-full p-2 rounded-lg border bg-background text-foreground border-border"
-          rows={4}
+          className="w-full p-2 rounded-lg border bg-background text-foreground border-border min-h-[100px] resize-none overflow-hidden"
           required
           disabled={isSubmitting}
         />

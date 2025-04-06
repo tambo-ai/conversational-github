@@ -107,7 +107,7 @@ export const IssueItem: React.FC<IssueItemProps> = ({ issue = {
     <div className="p-4 rounded-lg border bg-background text-foreground border-border max-w-xl">
       <div className="flex justify-between items-start">
         <div className="flex items-center gap-2">
-          <h3 className="text-lg font-semibold">{issue.title}</h3>
+          <h3 className="text-lg font-semibold text-left">{issue.title}</h3>
           <span className="text-sm text-muted-foreground">#{issue.number}</span>
         </div>
         <span className={`px-2 py-1 rounded-md text-sm ${issue.state === 'open' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
