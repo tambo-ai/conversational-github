@@ -59,6 +59,9 @@ const MessageThreadFull = React.forwardRef<
       {/* <MessageSuggestions /> */}
       <div className="p-4 rounded-md">
         <MessageInput contextKey={contextKey} />
+        <p className="text-sm text-muted-foreground text-center pt-1">
+          built with <a href="https://tambo.co" className="underline">tambo AI</a>
+        </p>
       </div>
     </div>
   );
