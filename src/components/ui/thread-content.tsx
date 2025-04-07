@@ -69,63 +69,73 @@ const ThreadContent = React.forwardRef<HTMLDivElement, ThreadContentProps>(
         className={cn(threadContentVariants({ variant }), className)}
         {...props}
       >
-        {messagesToShow.map((message, index) => {
-          const showLoading =
-            isGenerating && index === messagesToShow.length - 1;
-          const messageContent = Array.isArray(message.content)
-            ? (message.content[0]?.text ?? "Empty message")
-            : typeof message.content === "string"
-              ? message.content
-              : "Empty message";
+        {messages.length === 0 ? (
+          <div className={cn(
+            "flex items-center justify-center p-4",
+            "text-muted-foreground text-sm",
+            "animate-in fade-in-0",
+          )}>
+            Try finding or creating issues
+          </div>
+        ) : (
+          messagesToShow.map((message, index) => {
+            const showLoading =
+              isGenerating && index === messagesToShow.length - 1;
+            const messageContent = Array.isArray(message.content)
+              ? (message.content[0]?.text ?? "Empty message")
+              : typeof message.content === "string"
+                ? message.content
+                : "Empty message";
 
-          return (
-            <div
-              key={message.id ?? `${message.role}-${message.createdAt}`}
-              className={cn(
-                "animate-in fade-in-0 slide-in-from-bottom-2",
-                "duration-500 ease-in-out",
-                "opacity-0 animate-fade-in",
-              )}
-              style={{
-                animationDelay: `${index * 100}ms`,
-                animationFillMode: "forwards",
-                animation: "fadeIn 500ms ease-in-out forwards",
-              }}
-            >
-              <style jsx>{`
-                @keyframes fadeIn {
-                  from {
-                    opacity: 0;
-                    transform: translateY(10px);
-                  }
-                  to {
-                    opacity: 1;
-                    transform: translateY(0);
-                  }
-                }
-              `}</style>
+            return (
               <div
+                key={message.id ?? `${message.role}-${message.createdAt}`}
                 className={cn(
-                  "flex flex-col gap-1.5",
-                  message.role === "user" ? "ml-auto mr-0" : "ml-0 mr-auto",
-                  "max-w-[85%]",
+                  "animate-in fade-in-0 slide-in-from-bottom-2",
+                  "duration-500 ease-in-out",
+                  "opacity-0 animate-fade-in",
                 )}
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                  animationFillMode: "forwards",
+                  animation: "fadeIn 500ms ease-in-out forwards",
+                }}
               >
-                <Message
-                  role={
-                    message.role === "hydra" || message.role === "assistant"
-                      ? "assistant"
-                      : "user"
+                <style jsx>{`
+                  @keyframes fadeIn {
+                    from {
+                      opacity: 0;
+                      transform: translateY(10px);
+                    }
+                    to {
+                      opacity: 1;
+                      transform: translateY(0);
+                    }
                   }
-                  content={messageContent}
-                  variant={variant}
-                  message={message}
-                  isLoading={showLoading}
-                />
+                `}</style>
+                <div
+                  className={cn(
+                    "flex flex-col gap-1.5",
+                    message.role === "user" ? "ml-auto mr-0" : "ml-0 mr-auto",
+                    "max-w-[85%]",
+                  )}
+                >
+                  <Message
+                    role={
+                      message.role === "hydra" || message.role === "assistant"
+                        ? "assistant"
+                        : "user"
+                    }
+                    content={messageContent}
+                    variant={variant}
+                    message={message}
+                    isLoading={showLoading}
+                  />
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
     );
   },
