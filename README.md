@@ -1,6 +1,6 @@
 # Conversational GitHub Issue Interaction
 
-A web app that with a natural language interface for managing GitHub issues, built with [tambo ai](https://tambo.co/) for AI-powered UI.
+A web app with a natural language interface for managing GitHub issues, built with [tambo ai](https://tambo.co/) for AI-powered UI.
 
 ## Setup Instructions
 
